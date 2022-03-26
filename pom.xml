@@ -34,10 +34,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>stomp-websocket</artifactId>
-        </dependency>
     </dependencies>
 
     <build>

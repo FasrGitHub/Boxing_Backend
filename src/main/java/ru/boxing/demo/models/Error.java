@@ -1,10 +1,11 @@
 package ru.boxing.demo.models;
 
 public class Error {
-    public final boolean error = true;
+    public final boolean error;
     private String massage;
 
     public Error(String massage) {
+        this.error = true;
         this.massage = massage;
     }
 

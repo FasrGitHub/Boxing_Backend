@@ -1,24 +1,34 @@
 package ru.boxing.demo.config;
 
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.handler.PerConnectionWebSocketHandler;
+import ru.boxing.demo.controller.MyHandler;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+    private final BeanFactory beanFactory;
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
-        config.setApplicationDestinationPrefixes("/app");
+    public WebSocketConfig(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/websocket").addInterceptors(new HttpHandshakeInterceptor());
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(myHandler(), "/websocket");
+    }
+
+    @Bean
+    public WebSocketHandler myHandler() {
+        PerConnectionWebSocketHandler perConnectionWebSocketHandler = new PerConnectionWebSocketHandler(MyHandler.class);
+        perConnectionWebSocketHandler.setBeanFactory(beanFactory);
+
+        return perConnectionWebSocketHandler;
     }
 }

@@ -1,11 +1,11 @@
-package ru.boxing.demo.models;
+package ru.boxing.demo.models.messages;
 
-public class SuccessfulResponse {
+public class MassageResponseSuccessful {
     private final String type;
     private int requestId;
     private final String data;
 
-    public SuccessfulResponse(int requestId) {
+    public MassageResponseSuccessful(int requestId) {
         this.type = "response";
         this.requestId = requestId;
         this.data = "OK";

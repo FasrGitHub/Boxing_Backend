@@ -1,12 +1,12 @@
 package ru.boxing.demo.models.messages;
 
-public class MessageInit {
+public class MessageStateInit {
     private final String type = "state";
     private final String state = "init";
     private String username;
     private int waitingCount;
 
-    public MessageInit(int waitingCount, String username) {
+    public MessageStateInit(int waitingCount, String username) {
         this.waitingCount = waitingCount;
         this.username = username;
     }

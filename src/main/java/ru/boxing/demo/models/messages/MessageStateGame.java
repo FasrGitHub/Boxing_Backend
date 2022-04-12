@@ -2,13 +2,13 @@ package ru.boxing.demo.models.messages;
 
 import ru.boxing.demo.models.Game;
 
-public class MessageGame {
+public class MessageStateGame {
     private final String type = "state";
     private final String state = "game";
     private Game game;
     private String username;
 
-    public MessageGame(Game game, String username) {
+    public MessageStateGame(Game game, String username) {
         this.game = game;
         this.username = username;
     }

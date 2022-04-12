@@ -2,8 +2,7 @@ package ru.boxing.demo.services.handlers;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
-import ru.boxing.demo.models.messages.MessageInit;
-import ru.boxing.demo.services.SendMessageService;
+import ru.boxing.demo.services.MessageService;
 import ru.boxing.demo.services.SessionService;
 import ru.boxing.demo.services.UserTokenService;
 import ru.boxing.demo.services.WaitGameService;
@@ -16,17 +15,17 @@ public class ConnectHandlerService {
     private final UserTokenService userTokenService;
     private final SessionService sessionService;
     private final WaitGameService waitGameService;
-    private final SendMessageService sendMessageService;
+    private final MessageService messageService;
 
     public ConnectHandlerService(
             UserTokenService userTokenService,
             SessionService sessionService,
             WaitGameService waitGameService,
-            SendMessageService sendMessageService) {
+            MessageService messageService) {
         this.userTokenService = userTokenService;
         this.sessionService = sessionService;
         this.waitGameService = waitGameService;
-        this.sendMessageService = sendMessageService;
+        this.messageService = messageService;
     }
 
     public void onConnect(WebSocketSession session) throws IOException {
@@ -36,7 +35,7 @@ public class ConnectHandlerService {
         if (isAuthorized) {
             sessionService.addSession(username, session);
 
-            sendInitMessage(session, username);
+            messageService.sendInitMessage(session, username);
         } else {
             session.close();
         }
@@ -49,15 +48,5 @@ public class ConnectHandlerService {
             sessionService.removeSession(username);
             waitGameService.clearQueue();
         }
-    }
-
-    private void sendInitMessage(WebSocketSession session, String username) throws IOException {
-        // Пока что только 1 пользователь может быть в очереди.
-        // Для масштабирования сервера нужно переделать.
-        int waitingCount = waitGameService.getQueue();
-
-        MessageInit messageInit = new MessageInit(waitingCount, username);
-
-        sendMessageService.sendMessage(session, messageInit);
     }
 }

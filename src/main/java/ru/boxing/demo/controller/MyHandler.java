@@ -4,7 +4,7 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import ru.boxing.demo.services.handlers.AfterConnectionHandlerService;
+import ru.boxing.demo.services.handlers.ActionHandlerService;
 import ru.boxing.demo.services.handlers.ConnectHandlerService;
 import ru.boxing.demo.services.handlers.ErrorHandlerService;
 
@@ -12,16 +12,16 @@ import java.io.IOException;
 
 public class MyHandler extends TextWebSocketHandler {
     private final ConnectHandlerService connectHandlerService;
-    private final AfterConnectionHandlerService afterConnectionHandlerService;
+    private final ActionHandlerService actionHandlerService;
     private final ErrorHandlerService errorHandlerService;
 
     public MyHandler(
             ConnectHandlerService connectHandlerService,
-            AfterConnectionHandlerService afterConnectionHandlerService,
+            ActionHandlerService actionHandlerService,
             ErrorHandlerService errorHandlerService
     ) {
         this.connectHandlerService = connectHandlerService;
-        this.afterConnectionHandlerService = afterConnectionHandlerService;
+        this.actionHandlerService = actionHandlerService;
         this.errorHandlerService = errorHandlerService;
     }
 
@@ -35,9 +35,9 @@ public class MyHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         try {
-            afterConnectionHandlerService.processingRequest(session, message);
+            actionHandlerService.processingRequest(session, message);
         } catch (Exception e){
-            errorHandlerService.unexpectedError(session,e);
+            errorHandlerService.unexpectedError(session, message, e);
         }
     }
 

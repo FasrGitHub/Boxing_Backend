@@ -26,9 +26,6 @@ public class UserTokenService {
 
     public String getUsernameBySession(WebSocketSession session) {
         String str = String.valueOf(session.getUri());
-
-        // TODO: хардкод 36 символа поменять на поиск queryParam
-        // Возможно через Regex
         return searchByToken(str.substring(36));
     }
 
